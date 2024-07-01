@@ -27,6 +27,8 @@ function exibirPokemon(indice) {
     buscarDetalhesPokemon(pokemon.name).then(dados => {
         alterarTexto('name', capitalizarPrimeiraLetra(dados.name));
         alterarImagem('img_sprite_front_default', dados.sprites.front_default);
+    }).catch(error => {
+        console.error('Erro ao exibir os detalhes do Pokémon:', error);
     });
 }
 
@@ -45,7 +47,15 @@ function capitalizarPrimeiraLetra(string) {
 }
 
 function alterarImagem(id, url) {
-    document.getElementById(id).src = url;
+    const img = document.getElementById(id);
+    img.src = url;
+
+    // Adiciona um listener para o evento de erro
+    img.onerror = function() {
+        // Substitui a imagem com uma imagem padrão ou uma mensagem de erro
+        img.src = 'assets/missingno.png'; // ou qualquer imagem de fallback
+        console.error(`Erro ao carregar a imagem: ${url}`);
+    }
 }
 
 function alterarTexto(id, texto) {
@@ -53,4 +63,3 @@ function alterarTexto(id, texto) {
 }
 
 window.onload = buscarListaPokemon;
-
